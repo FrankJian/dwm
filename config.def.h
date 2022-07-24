@@ -8,7 +8,7 @@ static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const Bool viewontag         = True;     /* Switch view on tag switch */
 static const int user_bh            = 4;        /* 2 is the default spacing around the bar's font */
-static const char *fonts[]          = { "SauceCodePro Nerd Font:size=15" };
+static const char *fonts[]          = { "SauceCodePro Nerd Font:size=13" };
 static const char dmenufont[]       = "monospace:size=10";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
@@ -31,6 +31,7 @@ static const unsigned int alphas[][3]      = {
 
 static const char *const autostart[] = {
 	"st", NULL,
+	"dwmbar.sh", NULL,
 	NULL /* terminate */
 };
 
@@ -93,6 +94,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_grave,  togglescratch,  {.v = scratchpadcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
+	{ MODKEY,                       XK_r,      spawn,          SHCMD("rofi -show drun")},
 	{ MODKEY|ShiftMask,             XK_j,      rotatestack,    {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_k,      rotatestack,    {.i = -1 } },
 	{ MODKEY|ControlMask,           XK_space,  focusmaster,    {0} },
