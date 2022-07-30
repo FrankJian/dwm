@@ -246,6 +246,7 @@ static void tagmon(const Arg *arg);
 static void tagtoleft(const Arg *arg);
 static void tagtoright(const Arg *arg);
 static void tile(Monitor *m);
+static void grid(Monitor *m);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
 static void togglescratch(const Arg *arg);
@@ -2233,6 +2234,40 @@ tagtoright(const Arg *arg) {
 		selmon->sel->tags <<= 1;
 		focus(NULL);
 		arrange(selmon);
+	}
+}
+
+void
+grid(Monitor *m) {
+	unsigned int i, n;
+    unsigned int cx, cy, cw, ch;
+    unsigned int cols, rows;
+	Client *c;
+
+	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++) ;
+    if (n == 0) return;
+    if (n == 2) rows = 1, cols = 2;
+    else {
+        for (rows = 0; rows <= n / 2; rows++)
+            if (rows * rows >= n)
+                break;
+        cols = (rows && (rows - 1) * rows >= n) ? rows - 1 : rows;
+    }
+
+	ch = (m->wh - 2 * m->gap->gappx - (rows - 1) * m->gap->gappx) / rows;
+	cw = (m->ww - 2 * m->gap->gappx - (cols - 1) * m->gap->gappx) / cols;
+
+	for(i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next)) {
+		cx = m->wx + (i % cols) * (cw + m->gap->gappx);
+		cy = m->wy + (i / cols) * (ch + m->gap->gappx);
+
+        resize(c,
+               cx + m->gap->gappx,
+               cy + m->gap->gappx,
+               cw - 2 * c->bw,
+               ch - 2 * c->bw,
+               0);
+		i++;
 	}
 }
 
