@@ -204,6 +204,7 @@ static void grabkeys(void);
 static void hide(const Arg *arg);
 static void hidewin(Client *c);
 static void hideotherwins(const Arg *arg);
+static void showallhidden(const Arg *arg);
 static void incnmaster(const Arg *arg);
 static void keypress(XEvent *e);
 static void killclient(const Arg *arg);
@@ -1316,6 +1317,14 @@ grabkeys(void)
 					XGrabKey(dpy, code, keys[i].mod | modifiers[j], root,
 						True, GrabModeAsync, GrabModeAsync);
 	}
+}
+
+void
+showallhidden(const Arg *arg) {
+    Client *c;
+        for (c = selmon->clients; c; c = c->next)
+            if (ISVISIBLE(c) && HIDDEN(c))
+                showwin(c);
 }
 
 void
