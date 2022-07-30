@@ -10,19 +10,14 @@ static const Bool viewontag = True;  /* Switch view on tag switch */
 static const int user_bh =
     4; /* 2 is the default spacing around the bar's font */
 static const char *fonts[] = {"SauceCodePro Nerd Font:size=13"};
-static const char dmenufont[] = "monospace:size=10";
-static const char col_gray1[] = "#222222";
-static const char col_gray2[] = "#444444";
-static const char col_gray3[] = "#bbbbbb";
-static const char col_gray4[] = "#eeeeee";
-static const char col_cyan[] = "#005577";
 static const unsigned int baralpha = 0xd0;
 static const unsigned int borderalpha = OPAQUE;
 static const char *colors[][3] = {
     /*               fg         bg         border   */
-    [SchemeNorm] = {col_gray3, col_gray1, col_gray2},
-    [SchemeSel] = {col_gray4, col_cyan, col_cyan},
-    [SchemeHid] = {col_cyan, col_gray1, col_cyan},
+    [SchemeNorm] = {"#bbbbbb", "#333333", "#444444"},
+    [SchemeSel] = {"#ffffff", "#37474f", "#42A5F5"},
+    [SchemeHid] = {"#dddddd", NULL, NULL},
+    [SchemeUnderline] = {"#7799AA", "#7799AA", "#7799AA"},
 };
 static const unsigned int alphas[][3] = {
     /*               fg      bg        border     */
@@ -39,7 +34,7 @@ static const char *const autostart[] = {
 };
 
 /* tagging */
-static const char *tags[] = {"ﲵ ", " ", "3", "4", "5", "6", "7", "8", "9"};
+static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
 
 static const unsigned int ulinepad =
     5; /* horizontal padding between the underline and tag */
@@ -72,7 +67,7 @@ static const int lockfullscreen =
 
 static const Layout layouts[] = {
     /* symbol     arrange function */
-    {"[]=", tile}, /* first entry is default */
+    {"﬿", tile}, /* first entry is default */
     {"><>", NULL}, /* no layout function means floating behavior */
     {"[M]", monocle},
     {"|||", tcl},
@@ -93,11 +88,6 @@ static const Layout layouts[] = {
     }
 
 /* commands */
-static char dmenumon[2] =
-    "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = {
-    "dmenu_run", "-m",      dmenumon, "-fn",    dmenufont, "-nb",     col_gray1,
-    "-nf",       col_gray3, "-sb",    col_cyan, "-sf",     col_gray4, NULL};
 static const char *termcmd[] = {"st", NULL};
 static const char *trayercmd[] = {"t-toggle.sh", NULL};
 static const char scratchpadname[] = "scratchpad";
@@ -106,7 +96,6 @@ static const char *scratchpadcmd[] = {"st", "-t",     scratchpadname,
 
 static Key keys[] = {
     /* modifier                     key        function        argument */
-    {MODKEY, XK_p, spawn, {.v = dmenucmd}},
     {MODKEY, XK_Return, spawn, {.v = termcmd}},
     {MODKEY, XK_grave, togglescratch, {.v = scratchpadcmd}},
     {MODKEY, XK_b, togglebar, {0}},
