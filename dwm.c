@@ -2315,6 +2315,7 @@ togglefullscreen()
 	if (selmon->sel){
 		setfullscreen(selmon->sel, !selmon->sel->isfullscreen);
 	}
+	togglebar(NULL);
 }
 
 void
