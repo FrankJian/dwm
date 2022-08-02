@@ -204,6 +204,7 @@ static void grabkeys(void);
 static void hide(const Arg *arg);
 static void hidewin(Client *c);
 static void hideotherwins(const Arg *arg);
+static void hideotherwinsButton(const Arg *arg);
 static void showallhidden(const Arg *arg);
 static void incnmaster(const Arg *arg);
 static void keypress(XEvent *e);
@@ -1329,6 +1330,16 @@ showallhidden(const Arg *arg) {
 
 void
 hideotherwins(const Arg *arg) {
+    Client *c = (Client*)selmon->sel, *tc = NULL;
+    for (tc = selmon->clients; tc; tc = tc->next)
+        if (ISVISIBLE(tc))
+            hidewin(tc);
+    showwin(c);
+    focus(c);
+}
+
+void
+hideotherwinsButton(const Arg *arg) {
     Client *c = (Client*)arg->v, *tc = NULL;
     for (tc = selmon->clients; tc; tc = tc->next)
         if (ISVISIBLE(tc))

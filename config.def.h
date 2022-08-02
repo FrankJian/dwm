@@ -11,7 +11,7 @@ static const unsigned int snap         = 32;      /* snap pixel */
 static const int          showbar      = 1;       /* 0 means no bar */
 static const int          topbar       = 1;       /* 0 means bottom bar */
 static const Bool         viewontag    = True;    /* Switch view on tag switch */
-static const int          user_bh      = 4;       /* 2 is the default spacing around the bar's font */
+static const int          user_bh      = 3;       /* 2 is the default spacing around the bar's font */
 static const char         *fonts[]     = {"SauceCodePro Nerd Font:size=13"};
 static const unsigned int baralpha     = 0xd0;
 static const unsigned int borderalpha  = OPAQUE;
@@ -37,7 +37,7 @@ static const char *const autostart[]   = {
 };
 
 /* tagging */
-static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
+static const char *tags[] = { "", "", "", "", "", "", "", " ", "" };
 
 static const unsigned int ulinepad =
     5; /* horizontal padding between the underline and tag */
@@ -55,9 +55,9 @@ static const Rule rules[] = {
      */
     /* class      instance    title       tags mask     isfloating   monitor */
     {  "Gimp",    NULL,       NULL,       0,            1,           -1},
-    {  "Firefox", NULL,       NULL,       1 << 8,       0,           -1},
+    {  "Google-chrome", NULL,       NULL,       1 << 7,       0,           -1},
+    {  "Microsoft Teams - Preview", NULL,       NULL,       1 << 8,       0,           -1},
 };
-
 /* layout(s) */
 static const float  mfact   = 0.55; /* factor of master area size [0.05..0.95] */
 static const int    nmaster = 1;    /* number of clients in master area */
@@ -122,7 +122,8 @@ static Key keys[] = {
     {  MODKEY | ShiftMask,             XK_Return,                  zoom,              {0}},
     {  MODKEY,                         XK_Tab,                     view,              {0}},
     {  MODKEY,                         XK_q,                       killclient,        {0}},
-    {  MODKEY,                         XK_o,                       showallhidden,     {0}},
+    {  MODKEY | ShiftMask,             XK_o,                       showallhidden,     {0}},
+    {  MODKEY,                         XK_o,                       hideotherwins,     {0}},
     {  MODKEY,                         XK_t,                       setlayout,         {.v = &layouts[0]}},
     {  MODKEY,                         XK_g,                       setlayout,         {.v = &layouts[1]}},
     {  MODKEY,                         XK_m,                       setlayout,         {.v = &layouts[2]}},
@@ -168,7 +169,7 @@ static Button buttons[] = {
     {ClkLtSymbol,           0,              Button1,        setlayout,       {0}},
     {ClkLtSymbol,           0,              Button3,        setlayout,       {.v = &layouts[2]}},
     {ClkWinTitle,           0,              Button1,        togglewin,       {0}},
-    {ClkWinTitle,           0,              Button3,        hideotherwins,   {0}},
+    {ClkWinTitle,           0,              Button3,        hideotherwinsButton,   {0}},
     {ClkStatusText,         0,              Button2,        spawn,           {.v = termcmd}},
     {ClkClientWin,          MODKEY,         Button1,        movemouse,       {0}},
     {ClkClientWin,          MODKEY,         Button2,        togglefloating,  {0}},
