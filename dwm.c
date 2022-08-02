@@ -2783,27 +2783,67 @@ view(const Arg *arg)
 	arrange(selmon);
 }
 
+
 void
 viewtoleft(const Arg *arg) {
-	if(__builtin_popcount(selmon->tagset[selmon->seltags] & TAGMASK) == 1
-	&& selmon->tagset[selmon->seltags] > 1) {
-		selmon->seltags ^= 1; /* toggle sel tagset */
-		selmon->tagset[selmon->seltags] = selmon->tagset[selmon->seltags ^ 1] >> 1;
-		focus(NULL);
-		arrange(selmon);
-	}
+    unsigned int target = selmon->tagset[selmon->seltags], pre;
+    Client *c;
+    while (1) {
+        pre = target;
+        target >>= 1;
+        if (target == pre) return;
+
+        for (c = selmon->clients; c; c = c->next) {
+            if (c->tags & target && __builtin_popcount(selmon->tagset[selmon->seltags] & TAGMASK) == 1
+                    && selmon->tagset[selmon->seltags] > 1) {
+                view(&(Arg) { .ui = target });
+                return;
+            }
+        }
+    }
 }
+
+//void
+//viewtoleft(const Arg *arg) {
+//	if(__builtin_popcount(selmon->tagset[selmon->seltags] & TAGMASK) == 1
+//	&& selmon->tagset[selmon->seltags] > 1) {
+//		selmon->seltags ^= 1; /* toggle sel tagset */
+//		selmon->tagset[selmon->seltags] = selmon->tagset[selmon->seltags ^ 1] >> 1;
+//		focus(NULL);
+//		arrange(selmon);
+//	}
+//}
+
+
 
 void
 viewtoright(const Arg *arg) {
-	if(__builtin_popcount(selmon->tagset[selmon->seltags] & TAGMASK) == 1
-	&& selmon->tagset[selmon->seltags] & (TAGMASK >> 1)) {
-		selmon->seltags ^= 1; /* toggle sel tagset */
-		selmon->tagset[selmon->seltags] = selmon->tagset[selmon->seltags ^ 1] << 1;
-		focus(NULL);
-		arrange(selmon);
-	}
+    unsigned int target = selmon->tagset[selmon->seltags];
+    Client *c;
+    while (1) {
+        target = target == 0 ? 1 : target << 1;
+        if (!(target & TAGMASK)) return;
+
+        for (c = selmon->clients; c; c = c->next) {
+            if (c->tags & target && __builtin_popcount(selmon->tagset[selmon->seltags] & TAGMASK) == 1
+                    && selmon->tagset[selmon->seltags] & (TAGMASK >> 1)) {
+                view(&(Arg) { .ui = target });
+                return;
+            }
+        }
+    }
 }
+
+//void
+//viewtoright(const Arg *arg) {
+//	if(__builtin_popcount(selmon->tagset[selmon->seltags] & TAGMASK) == 1
+//	&& selmon->tagset[selmon->seltags] & (TAGMASK >> 1)) {
+//		selmon->seltags ^= 1; /* toggle sel tagset */
+//		selmon->tagset[selmon->seltags] = selmon->tagset[selmon->seltags ^ 1] << 1;
+//		focus(NULL);
+//		arrange(selmon);
+//	}
+//}
 
 Client *
 wintoclient(Window w)
