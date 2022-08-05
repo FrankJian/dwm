@@ -12,7 +12,7 @@ file_path=$(readlink -f "$0")
 cpu() {
   cpu_val=$(grep -o "^[^ ]*" /proc/loadavg)
 
-  printf "^c$blue^   $cpu_val"
+  printf "^c$blue^ 閭 $cpu_val"
 }
 
 pkg_updates() {
@@ -29,7 +29,25 @@ pkg_updates() {
 
 battery() {
   get_capacity="$(cat /sys/class/power_supply/BAT0/capacity)"
-  printf "^c$blue^   $get_capacity"
+  bat_text=$(expr $(acpi -b | sed 2d | awk '{print $4}' | grep -Eo "[0-9]+"))
+  [ ! "$(acpi -b | grep 'Battery 0' | grep Discharging)" ] && charge_icon=""
+  if  [ "$bat_text" -ge 95 ];  then bat_icon="";
+  elif [ "$bat_text" -ge 90 ]; then bat_icon="";
+  elif [ "$bat_text" -ge 80 ]; then bat_icon="";
+  elif [ "$bat_text" -ge 70 ]; then bat_icon="";
+  elif [ "$bat_text" -ge 60 ]; then bat_icon="";
+  elif [ "$bat_text" -ge 50 ]; then bat_icon="";
+  elif [ "$bat_text" -ge 40 ]; then bat_icon="";
+  elif [ "$bat_text" -ge 30 ]; then bat_icon="";
+  elif [ "$bat_text" -ge 20 ]; then bat_icon="";
+  elif [ "$bat_text" -ge 10 ]; then bat_icon="";
+  else bat_icon=""; fi
+
+  bat_text="$bat_text"
+  bat_icon="$charge_icon$bat_icon"
+  text="$bat_icon$bat_text"
+  printf "^c$blue^ ${bat_icon} "
+  printf "$bat_text"
 }
 
 brightness() {
@@ -44,7 +62,9 @@ mem() {
 
 wlan() {
 	case "$(cat /sys/class/net/wl*/operstate 2>/dev/null)" in
-	up) printf "^c$blue^   Connected" ;;
+	up)
+    nm_name=$(nmcli -a | grep "connected to" | awk -F ' ' '{print($NF)}')
+	  printf "^c$blue^   ${nm_name}" ;;
 	down) printf "^c$red^  Disconnected" ;;
 	esac
 }
