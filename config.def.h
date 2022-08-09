@@ -57,6 +57,8 @@ static const Rule rules[] = {
     {  "Gimp",    NULL,       NULL,       0,            1,           -1},
     {  "Google-chrome", NULL,       NULL,       1 << 7,       0,           -1},
     {  "Microsoft Teams - Preview", NULL,       NULL,       1 << 8,       0,           -1},
+    {  "jetbrains-pycharm", NULL,       NULL,       1 << 6,       0,           -1},
+    {  "jetbrains-toolbox", NULL,       NULL,       1 << 6,       1,           -1},
 };
 /* layout(s) */
 static const float  mfact   = 0.55; /* factor of master area size [0.05..0.95] */
