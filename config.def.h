@@ -94,7 +94,7 @@ static const Layout layouts[] = {
     }
 
 /* commands */
-static const char *termcmd[]       = {"st", NULL};
+static const char *termcmd[]       = {"kitty", NULL};
 static const char *trayercmd[]     = {"t-toggle.sh", NULL};
 static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = {"st", "-t",     scratchpadname,
