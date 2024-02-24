@@ -37,7 +37,7 @@ static const char *const autostart[]   = {
 };
 
 /* tagging */
-static const char *tags[] = { "", "", "", "", "", "", "", " ", "" };
+static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
 
 static const unsigned int ulinepad =
     5; /* horizontal padding between the underline and tag */
@@ -57,8 +57,6 @@ static const Rule rules[] = {
     {  "Gimp",    NULL,       NULL,       0,            1,           -1},
     {  "Google-chrome", NULL,       NULL,       1 << 7,       0,           -1},
     {  "Microsoft Teams - Preview", NULL,       NULL,       1 << 8,       0,           -1},
-    {  "jetbrains-pycharm", NULL,       NULL,       1 << 6,       0,           -1},
-    {  "jetbrains-toolbox", NULL,       NULL,       1 << 6,       1,           -1},
 };
 /* layout(s) */
 static const float  mfact   = 0.55; /* factor of master area size [0.05..0.95] */
@@ -116,9 +114,9 @@ static const Key keys[] = {
     {  MODKEY | ControlMask,           XK_k,                       focusstackhid,     {.i = -1}},
     {  MODKEY,                         XK_i,                       incnmaster,        {.i = +1}},
     {  MODKEY,                         XK_d,                       incnmaster,        {.i = -1}},
-    {  0,                              XF86XK_AudioLowerVolume,    spawn,             SHCMD("pactl set-sink-volume 0 -5%")},
-    {  0,                              XF86XK_AudioRaiseVolume,    spawn,             SHCMD("pactl set-sink-volume 0 +5%")},
-    {  MODKEY | ShiftMask | ControlMask,XK_m,                       spawn,             SHCMD("cmd set_vol mute")},
+    {  0,                              XF86XK_AudioLowerVolume,    spawn,             SHCMD("control_volume.sh down 5%")},
+    {  0,                              XF86XK_AudioRaiseVolume,    spawn,             SHCMD("control_volume.sh up 5%")},
+    {  MODKEY | ShiftMask | ControlMask,XK_m,           spawn,             SHCMD("control_volume.sh mute")},
     {  MODKEY,                         XK_h,                       setmfact,          {.f = -0.05}},
     {  MODKEY,                         XK_l,                       setmfact,          {.f = +0.05}},
     {  MODKEY | ShiftMask,             XK_Return,                  zoom,              {0}},
