@@ -4,7 +4,7 @@
 //                基础配置，看自己习惯
 //=============================================================================
 static const int newclientathead          = 0;         /* 定义新窗口在栈顶还是栈底 */
-static int showsystray                    = 1;         /* 是否显示托盘栏 */
+static int showsystray                    = 0;         /* 是否显示托盘栏 */
 static const unsigned int systraypinning  = 1;         /* 托盘跟随的显示器 0代表不指定显示器 */
 static const unsigned int systrayspacing  = 1;         /* 托盘间距 */
 static const unsigned int systrayspadding = 10;         /* 托盘和状态栏的间隙 */
@@ -18,7 +18,7 @@ static const int sidepad                  = 3;         /* horizontal padding of 
 static const int overviewgappi            = 20;        /* overview时 窗口与窗口 缝隙大小 */
 static const int overviewgappo            = 30;        /* overview时 窗口与边缘 缝隙大小 */
 static const int showbar                  = 1;         /* 是否显示状态栏 */
-static const int topbar                   = 0;         /* 指定状态栏位置 0底部 1顶部 */
+static const int topbar                   = 1;         /* 指定状态栏位置 0底部 1顶部 */
 static const float mfact                  = 0.5;       /* 主工作区 大小比例 */
 static const int   nmaster                = 1;         /* 主工作区 窗口数量 */
 static const int nstack                   = 0;         /* number of clients in primary stack area */
@@ -61,7 +61,7 @@ static const char *colors[][3]{
 /*SchemeSystray   托盘      */   { NULL, blue, NULL },
 /*SchemeNormTag   普通标签  */   { "#aaaaaa", "#333333", NULL },
 /*SchemeSelTag    选中标签  */   { "#eeeeee", "#333333", NULL },
-/*SchemeBarEmpty  空白状态栏*/   { "#1e222a", "#1e222a", NULL },
+/*SchemeBarEmpty  空白状态栏*/   { NULL, NULL, NULL },
 /*SchemeOverView  overview  */   { red2, black, black },
 };
 //-----------------------------------------------------------------------------
@@ -85,7 +85,7 @@ static const unsigned int alphas[][3] = {
 /*SchemeSystray   托盘      */   { NULL, 0xff, borderalpha },
 /*SchemeNormTag   普通标签  */   { NULL, 0xff, NULL }, 
 /*SchemeSelTag    选中标签  */   { NULL, 0xff, NULL },
-/*SchemeBarEmpty  空白状态栏*/   { 0xff, 0xff, NULL },
+/*SchemeBarEmpty  空白状态栏*/   { 0x00, 0xd0, NULL },
 /*SchemeOverView  overview  */   { 0xff, 0xff, borderalpha },      
 /*SchemeStatusText状态栏文本*/   { NULL, 0xff, NULL },
 };
@@ -118,8 +118,6 @@ static const char *autostartscript = "autostart.sh";
 //-----------------------------------------------------------------------------
 //                     状态栏启动脚本
 static const char *statusbarscript = "~/.dwm/statusbar/statusbar.py";//gxt_kt
-
-
 
 //=============================================================================
 //                 自定义 scratchpad
@@ -159,6 +157,7 @@ static const Rule rules[] = {
     // {"wemeetapp",   NULL,       NULL,      TAGMASK,     1,         1,        0,        -1}, // 腾讯会议有bug,需要使用global类型
     {"copyq",       NULL,       NULL,      TAGMASK,     1,         1,        0,        -1},
     {"Nitrogen",    NULL,       NULL,      TAGMASK,     1,         0,        0,        -1},
+    {"Google-chrome", NULL,     NULL,      1<<6,         0,         0,        0,        -1},  // chrome dedicate to tag 7
     {NULL,          NULL,     "图片查看",  TAGMASK,     1,         0,        0,        -1},  // qq image preview title
     {NULL,          NULL, "Image Preview", TAGMASK,     1,         0,        0,        -1},  // wechat image preview title
     {NULL,          NULL,"Bluetooth Devices",TAGMASK,   1,         0,        0,        -1},  // bluetooth manager
@@ -174,7 +173,7 @@ static const Rule rules[] = {
     // { NULL, NULL, "图片预览",  0,  1,   0,   0,  -1 },
 
 //-----------------------------------------------------------------------------
-    // 以下适用于无边框，浮动窗口，全局显示，请勿更改
+// 以下适用于无边框，浮动窗口，全局显示，请勿更改
     {"FG", NULL, NULL, TAGMASK, 1, 1, 1, -1},      // 浮动 + 全局
     {"FN", NULL, NULL, 0, 1, 0, 1, -1},            // 浮动 + 无边框
     {"GN", NULL, NULL, TAGMASK, 0, 1, 1, -1},      // 全局 + 无边框
@@ -287,6 +286,8 @@ static Key keys[] = {
     { MODKEY,              XK_i,       GoBackToNextTag,   {0} },        // 切换历史tag 
 //-----------------------------------------------------------------------------
   
+// SysTray
+    {MODKEY|ShiftMask,     XK_t,       spawn,             SHCMD("~/.dwm/t-toggle.sh")},// open trayer
 
 //=============================================================================
 //                 一些其它快捷键，可以根据需要和习惯更改
@@ -352,8 +353,8 @@ static Key keys[] = {
 //=============================================================================
 //                              其它命令
 //=============================================================================
-    { MODKEY,              XK_s,        spawn,   SHCMD("rofi -show drun -show-icons") },// rofi
-    { MODKEY|ControlMask,  XK_s,        spawn,   SHCMD("rofi -show run -show-icons") }, // rofi 
+    { MODKEY,              XK_r,        spawn,   SHCMD("rofi -show drun -show-icons") },// rofi
+    { MODKEY|ControlMask,  XK_r,        spawn,   SHCMD("rofi -show run -show-icons") }, // rofi 
     // Notice that if you first use copyq , Remeber config 1.disable tray show 2.Enable hidden mainwindow. Then you can use this better.
     { MODKEY,              XK_v,        spawn,   SHCMD("copyq toggle") },  // copyq
     { MODKEY|ShiftMask,    XK_s,        spawn,   SHCMD("flameshot gui") }, // flameshot
@@ -381,8 +382,8 @@ static Key keys[] = {
     // { MODKEY|ShiftMask,    XK_j,        rotatestack,      {.i = +1 } },    /* rotate the stack*/
     // { MODKEY|ShiftMask,    XK_k,        rotatestack,      {.i = -1 } },    /* rotate the stack*/
 //-----------------------------------------------------------------------------
-    // { MODKEY|ShiftMask,    XK_Left,     viewtoleft,       {0} },      //聚焦到左边的tag 
-    // { MODKEY|ShiftMask,    XK_Right,    viewtoright,      {0} },      // 聚焦到右边的tag 
+     { MODKEY|ShiftMask,    XK_Left,     viewtoleft,       {0} },      //聚焦到左边的tag 
+     { MODKEY|ShiftMask,    XK_Right,    viewtoright,      {0} },      // 聚焦到右边的tag 
 //-----------------------------------------------------------------------------
     // { MODKEY|ShiftMask,    XK_Left,     tagtoleft,        {0} },      // 将本窗口移动到左边tag
     // { MODKEY|ShiftMask,    XK_Right,    tagtoright,       {0} },      // 将本窗口移动到右边tag 
@@ -406,7 +407,6 @@ static Key keys[] = {
     TAGKEYS(XK_7, 6,  0)
     TAGKEYS(XK_8, 7,  0)
     TAGKEYS(XK_9, 8,  0)
-    TAGKEYS(XK_r, 5,  "obs")
     TAGKEYS(XK_c, 6,  "google-chrome-stable") 
     TAGKEYS(XK_m, 7,  "/opt/YesPlayMusic/yesplaymusic")
 //-----------------------------------------------------------------------------
